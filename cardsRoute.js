@@ -1,10 +1,10 @@
+var express = require('express');
+var session = require('express-session');
+var app = express();
 var sql = require('./db');
 var con = sql();
 var router = express.Router();
-var express = require('express');
-var session = require('express-session');
 var bodyparser = require('body-parser');
-var app = express();
 var cors = require('cors');
 
 app.use(session({ secret: "secrets" }));
@@ -12,7 +12,7 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 
-router.get("/cards/home", (req, res) => {
+router.get("/home", (req, res) => {
     con.query(`SELECT * FROM cards ORDER BY senddate DESC LIMIT 24`, (err, result, fields) => {
         console.log(result);
         if (err) {
@@ -24,7 +24,7 @@ router.get("/cards/home", (req, res) => {
     })
 })
 
-router.get("/cards/you", (req, res) => {
+router.get("/you", (req, res) => {
     var empno = req.body.empno;
     con.query(`select * from cards where rempno='${empno}'`, (err, result, fields) => {
         if (err) {
@@ -36,7 +36,7 @@ router.get("/cards/you", (req, res) => {
     })
 })
 
-router.post("/cards/new", (req, res) => {
+router.post("/new", (req, res) => {
     var rempno = req.body.rempno;
     var rmempno = req.body.rmempno;
     var sempno = req.body.sempno;
@@ -54,7 +54,7 @@ router.post("/cards/new", (req, res) => {
     res.end();
 })
 
-// router.get("/cards/home", (req, res) => {
+// router.get("/home", (req, res) => {
 //     con.query(`SELECT * FROM cards WHERE YEAR(senddate) = YEAR(CURRENT_DATE)
 //      AND MONTH(senddate) = MONTH(CURRENT_DATE)`, (err, result, fields) => {
 //         console.log(result);
