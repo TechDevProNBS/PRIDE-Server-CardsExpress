@@ -25,8 +25,8 @@ router.get("/home", (req, res) => {
 })
 
 router.get("/user", (req, res) => {
-    var empno = req.body.empno;
-    con.query(`select * from cards where rempno='${empno}'`, (err, result, fields) => {
+    var empno = req.body.rempno;
+    con.query(`select * from cards where rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         if (err) {
             throw err;
         }
@@ -95,6 +95,19 @@ router.post("/new", (req, res) => {
 
     res.send("Pride card submitted");
 
+})
+
+router.get("/mySentCards", (req, res) => {
+    var empno = req.body.sempno;
+    con.query(`SELECT * FROM cards where sempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
+        console.log(result);
+        if (err) {
+            throw err;
+        }
+        else {
+            res.send(result);
+        }
+    })
 })
 
 // router.get("/cards/home", (req, res) => {
