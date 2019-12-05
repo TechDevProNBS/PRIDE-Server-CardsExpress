@@ -1,10 +1,10 @@
+var express = require('express');
+var session = require('express-session');
+var app = express();
 var sql = require('./db');
 var con = sql();
-var express = require('express');
 var router = express.Router();
-var session = require('express-session');
 var bodyparser = require('body-parser');
-var app = express();
 var cors = require('cors');
 
 app.use(session({ secret: "secrets" }));
@@ -24,9 +24,9 @@ router.get("/home", (req, res) => {
     })
 })
 
-router.get("/you", (req, res) => {
-    var empno = req.body.empno;
-    con.query(`select * from cards where rempno='${empno}'`, (err, result, fields) => {
+router.get("/user", (req, res) => {
+    var empno = req.body.rempno;
+    con.query(`select * from cards where rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         if (err) {
             throw err;
         }
@@ -35,6 +35,7 @@ router.get("/you", (req, res) => {
         }
     })
 })
+
 
 router.post("/new", (req, res) => {
     var rempno = req.body.rempno;
@@ -69,9 +70,21 @@ router.get("/cardNumbers", (req, res) => {
         var values={"P":p,"R":r,"I":i,"D":d,"E":e}
         res.send(values);
     }
-
     getValues();
+})
 
+   
+router.get("/mySentCards", (req, res) => {
+    var empno = req.body.sempno;
+    con.query(`SELECT * FROM cards where sempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
+        console.log(result);
+        if (err) {
+            throw err;
+        }
+        else {
+            res.send(result);
+        }
+    })
 })
 
 function countCards(cardCategory,rempno){
