@@ -37,7 +37,7 @@ router.get("/user", (req, res) => {
 })
 
 
-router.post("/new", (req, res) => {
+router.post("/newCard", (req, res) => {
     var rempno = req.body.rempno;
     var rmempno = req.body.rmempno;
     var sempno = req.body.sempno;
