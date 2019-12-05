@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-let allConfig = require('./config.js');
+let allConfig = require('./config.json');
 let profile = allConfig.currentProfile;
 let config = allConfig[profile];
 
