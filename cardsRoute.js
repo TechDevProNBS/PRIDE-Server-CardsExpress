@@ -1,10 +1,10 @@
+var express = require('express');
+var session = require('express-session');
+var app = express();
 var sql = require('./db');
 var con = sql();
-var express = require('express');
 var router = express.Router();
-var session = require('express-session');
 var bodyparser = require('body-parser');
-var app = express();
 var cors = require('cors');
 
 app.use(session({ secret: "secrets" }));
@@ -24,9 +24,9 @@ router.get("/home", (req, res) => {
     })
 })
 
-router.get("/you", (req, res) => {
-    var empno = req.body.empno;
-    con.query(`select * from cards where rempno='${empno}'`, (err, result, fields) => {
+router.get("/user", (req, res) => {
+    var empno = req.body.rempno;
+    con.query(`select * from cards where rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         if (err) {
             throw err;
         }
@@ -36,6 +36,7 @@ router.get("/you", (req, res) => {
     })
 })
 
+
 router.post("/new", (req, res) => {
     var rempno = req.body.rempno;
     var rmempno = req.body.rmempno;
@@ -44,56 +45,69 @@ router.post("/new", (req, res) => {
     var senddate = req.body.senddate;
     var message = req.body.message;
     var picurl = req.body.picurl;
-    var p=0;
-    var r=0;
-    var i=0;
-    var d=0;
-    var e=0;
+    var p = 0;
+    var r = 0;
+    var i = 0;
+    var d = 0;
+    var e = 0;
     con.query(`insert into cards values('${rempno}', '${rmempno}',
                 '${sempno}', '${category}', '${senddate}', '${message}', '${picurl}')`, (err, result) => {
-            if (err) {
-                throw err;
-            }
-        })
+        if (err) {
+            throw err;
+        }
+    })
 
-    con.query(`select count(rempno) from cards where category='P' and rempno='${rempno}'`,function(error,result){
+    con.query(`select count(rempno) from cards where category='P' and rempno='${rempno}'`, function (error, result) {
         result.forEach(element => {
-            p=element['count(rempno)'];
+            p = element['count(rempno)'];
         });
     });
 
-    con.query(`select count(rempno) from cards where category='R' and rempno='${rempno}'`,function(error,result){
+    con.query(`select count(rempno) from cards where category='R' and rempno='${rempno}'`, function (error, result) {
         result.forEach(element => {
-            r=element['count(rempno)'];
+            r = element['count(rempno)'];
         });
     });
 
-    con.query(`select count(rempno) from cards where category='I' and rempno='${rempno}'`,function(error,result){
+    con.query(`select count(rempno) from cards where category='I' and rempno='${rempno}'`, function (error, result) {
         result.forEach(element => {
-            i=element['count(rempno)'];
+            i = element['count(rempno)'];
         });
     });
 
-    con.query(`select count(rempno) from cards where category='D' and rempno='${rempno}'`,function(error,result){
+    con.query(`select count(rempno) from cards where category='D' and rempno='${rempno}'`, function (error, result) {
         result.forEach(element => {
-            d=element['count(rempno)'];
+            d = element['count(rempno)'];
         });
     });
 
-    con.query(`select count(rempno) from cards where category='E' and rempno='${rempno}'`,function(error,result){
+    con.query(`select count(rempno) from cards where category='E' and rempno='${rempno}'`, function (error, result) {
         result.forEach(element => {
-            e=element['count(rempno)'];
+            e = element['count(rempno)'];
         });
     });
 
-    console.log("Number of P: "+p);
-    console.log("Number of R: "+r);
-    console.log("Number of I: "+i);
-    console.log("Number of D: "+d);
-    console.log("Number of E: "+e);
-        
+    console.log("Number of P: " + p);
+    console.log("Number of R: " + r);
+    console.log("Number of I: " + i);
+    console.log("Number of D: " + d);
+    console.log("Number of E: " + e);
+
     res.send("Pride card submitted");
-    
+
+})
+
+router.get("/mySentCards", (req, res) => {
+    var empno = req.body.sempno;
+    con.query(`SELECT * FROM cards where sempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
+        console.log(result);
+        if (err) {
+            throw err;
+        }
+        else {
+            res.send(result);
+        }
+    })
 })
 
 // router.get("/cards/home", (req, res) => {
