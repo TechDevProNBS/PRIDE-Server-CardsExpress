@@ -3,7 +3,7 @@ var app = express();
 var PORT = process.env.PORT || 5000;
 var bodyparser = require("body-parser");
 var cors = require('cors');
-var cards=require('./cardsRoute')
+const cards = require('./cardsRoute');
 
 app.set('view engine', 'ejs');
 app.use(bodyparser.json())
