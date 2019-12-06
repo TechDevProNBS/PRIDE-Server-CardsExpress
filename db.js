@@ -3,6 +3,10 @@ let allConfig = require('./config.json');
 let profile = allConfig.currentProfile;
 let config = allConfig[profile];
 
+/**
+ * This module is all about connecting to the database and uses a config.json file to define
+ * required parameters to connect with the databse.
+ */
 module.exports =
     function connection() {
         let database = config.database;

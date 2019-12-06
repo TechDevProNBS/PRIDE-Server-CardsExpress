@@ -7,11 +7,18 @@ var router = express.Router();
 var bodyparser = require('body-parser');
 var cors = require('cors');
 
+/**
+ * We will be using sessions when login information received from chris, the below is awaiting that.
+ */
 app.use(session({ secret: "secrets" }));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 
+/**
+ * This endpoint will get the latest 24 cards from sql db and provide them in descending order by senddate
+ * and send them to PRIDEWall
+ */
 router.get("/home", (req, res) => {
     con.query(`SELECT * FROM cards ORDER BY senddate DESC LIMIT 24`, (err, result, fields) => {
         console.log(result);
@@ -24,9 +31,11 @@ router.get("/home", (req, res) => {
     })
 })
 
+/**
+ * This endpoint will get all cards from sql db relating to a user and send them to MyPride.
+ */
 router.post("/user", (req, res) => {
     var empno = req.body.rempno;
-    console.log(req.body + "----->" + empno)
     con.query(`select * from cards where rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         if (err) {
             throw err;
@@ -37,7 +46,10 @@ router.post("/user", (req, res) => {
     })
 })
 
-
+/**
+ * This endpoint will take a new card in the req parameter and send it to the sql db.
+ * Returns a message saying "Pride card submitted."
+ */
 router.post("/newCard", (req, res) => {
     var rempno = req.body.rempno;
     var rmempno = req.body.rmempno;
@@ -74,8 +86,10 @@ router.get("/cardNumbers", (req, res) => {
     getValues();
 })
 
-
-router.get("/mySentCards", (req, res) => {
+/**
+ * This endpoint will retrieve all one users sent cards and send them back to MySentCards on front end.
+ */
+router.post("/mySentCards", (req, res) => {
     var empno = req.body.sempno;
     con.query(`SELECT * FROM cards where sempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         console.log(result);
