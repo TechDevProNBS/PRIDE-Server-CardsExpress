@@ -10,6 +10,9 @@ app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 
+/**
+ * The below app.use will allow incoming requests to be checked against the cardsRoute file.
+ */
 app.use('/cards', cards);
 
 app.listen(PORT, () => {
