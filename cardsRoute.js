@@ -71,6 +71,19 @@ router.post("/newCard", (req, res) => {
     res.send("Pride card submitted");
 })
 
+/**
+ * When the front end navigates to the cardNumbers link, the getValues function is called to obtain the number of each
+ * PRIDE card category that the user currently has. This is done by calling the countCards function with two parameters: the category of
+ * PRIDE card and the employee number.
+ * 
+ * The function uses the async and await properties to ensure that the SQL qeuries are executed succesfully before subsequent lines of 
+ * code run.
+ *
+ * The returned values are stored as variables(p,r,i,d,e) and used to create a JSON object (values)
+ * which is sent to the front end as the response object.
+ * 
+ */
+
 router.get("/cardNumbers", (req, res) => {
     var rempno = 'P04967'; //Needs to be obtained via login session object
 
@@ -101,6 +114,16 @@ router.post("/mySentCards", (req, res) => {
         }
     })
 })
+
+/**
+ * The function is called by the getValues function and recives two parameters
+ * @param {*} cardCategory Category of card: P,R,I,D or E.
+ * @param {*} rempno Employee number of the user viewing the MyPride page.
+ * 
+ * The function runs a SQL query to count the number of cards a user has for the specified PRIDE category.
+ * @returns A new promise object which is resolved with the result of the SQL query 
+ * 
+ */
 
 function countCards(cardCategory, rempno) {
     return new Promise(function (resolve, reject) {
