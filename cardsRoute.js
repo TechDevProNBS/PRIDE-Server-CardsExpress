@@ -108,7 +108,7 @@ router.post("/mySentCards", (req, res) => {
             throw err;
         }
         else {
-            res.send(result);
+            res.send({"response":"Pride card submitted."});
         }
     })
 })
