@@ -58,15 +58,29 @@ router.post("/newCard", (req, res) => {
     var senddate = req.body.senddate;
     var message = req.body.message;
     var picurl = req.body.picurl;
-
-    con.query(`insert into cards values('${rempno}', '${rmempno}',
+    
+    if (rempno == "") {
+        res.send({ "response": "Please enter the employee number of the receiver." });
+    }
+    else if (sempno =="") {
+        res.send({ "response": "Sender's employee number not found, please restart app and try again." });
+    }
+    else if (category =="") {
+        res.send({ "response": "Category cannot be null, please select one of the PRIDE values" });
+    }
+    else if (message =="") {
+        res.send({ "response": "Please enter a comment explaining why you are sending the card." });
+    }
+    else {
+        con.query(`insert into cards values('${rempno}', '${rmempno}',
     '${sempno}', '${category}', '${senddate}', '${message}', '${picurl}')`, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            res.send({ "response": "Pride card submitted" });
-        }
-    })
+            if (err) {
+                throw err;
+            } else {
+                res.send({ "response": "Pride card submitted" });
+            }
+        })
+    }
 })
 
 /**
