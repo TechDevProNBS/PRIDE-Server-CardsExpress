@@ -20,7 +20,7 @@ app.use(cors());
  * and send them to PRIDEWall
  */
 router.get("/home", (req, res) => {
-    con.query(`SELECT * FROM cards ORDER BY senddate DESC LIMIT 24`, (err, result, fields) => {
+    con.query(`SELECT cards.rempno,sempno,senddate,category,message,emp_name FROM cards INNER JOIN employees ON cards.rempno=employees.rempno ORDER BY senddate DESC LIMIT 24`, (err, result, fields) => {
         console.log(result);
         if (err) {
             throw err;
@@ -36,7 +36,7 @@ router.get("/home", (req, res) => {
  */
 router.post("/user", (req, res) => {
     var empno = req.body.rempno;
-    con.query(`select * from cards where rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
+    con.query(`SELECT cards.rempno,cards.sempno,senddate,category,message,emp_name FROM cards INNER JOIN employees ON cards.sempno=employees.rempno where cards.rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         if (err) {
             throw err;
         }
@@ -102,13 +102,13 @@ router.get("/cardNumbers", (req, res) => {
  */
 router.post("/mySentCards", (req, res) => {
     var empno = req.body.sempno;
-    con.query(`SELECT * FROM cards where sempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
+    con.query(`SELECT cards.rempno,cards.sempno,senddate,category,message,emp_name FROM cards INNER JOIN employees ON cards.rempno=employees.rempno where sempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
         console.log(result);
         if (err) {
             throw err;
         }
         else {
-            res.send({"response":"Pride card submitted."});
+            res.send(result);
         }
     })
 })
