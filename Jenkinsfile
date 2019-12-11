@@ -3,18 +3,12 @@ pipeline {
   
   stages {
 
-	  stage('Clone') {
-		steps{
 
-		 sh 'git clone https://github.com/TechDevProNBS/PRIDE-Server-CardsExpress.git'
-	  }
-
-	  }
     stage('Build') {
 	steps {
 
 	
-		sh 'docker build -t="pride-cards"'
+		sh 'docker build -t="pride-cards" .'
 		echo "Build successful"
 	           }
 	 }
