@@ -6,15 +6,15 @@ pipeline {
 	  stage('Clone') {
 		steps{
 
-		 sh 'git clone https://github.com/TechDevProNBS/PRIDE-Server-AchievementsSpringboot.git'
+		 sh 'git clone https://github.com/TechDevProNBS/PRIDE-Server-CardsExpress.git'
 	  }
 
 	  }
     stage('Build') {
 	steps {
 
-		sh 'mvn package -DskipTests'
-		sh 'docker build --tag "Pride:latest"'
+	
+		sh 'docker build --tag "PrideCards"'
 		echo "Build successful"
 	           }
 	 }
