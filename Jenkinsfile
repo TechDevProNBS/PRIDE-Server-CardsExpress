@@ -14,7 +14,7 @@ pipeline {
 	steps {
 
 	
-		sh 'docker build --tag "PrideCards"'
+		sh 'docker build -t="pride-cards"'
 		echo "Build successful"
 	           }
 	 }
