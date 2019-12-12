@@ -97,7 +97,7 @@ router.post("/newCard", (req, res) => {
  */
 
 router.get("/cardNumbers", (req, res) => {
-    var rempno = 'P04967'; //Needs to be obtained via login session object
+    var rempno = 'P430221'; //Needs to be obtained via login session object
 
     async function getValues() {
         var p = await countCards('P', rempno);
