@@ -14,7 +14,6 @@ app.use(cors());
  * The below app.use will allow incoming requests to be checked against the cardsRoute file.
  */
 app.use('/cards', cards);
-
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
 });
