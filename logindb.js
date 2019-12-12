@@ -9,7 +9,7 @@ let config = allConfig[profile];
  */
 module.exports =
     function connection() {
-        let database = config.database;
+        let database = config.login_database;
         var con = mysql.createConnection({
             "port": database.port,
             "host": database.host,

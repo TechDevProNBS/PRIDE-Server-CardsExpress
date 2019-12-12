@@ -3,6 +3,8 @@ var session = require('express-session');
 var app = express();
 var sql = require('./db');
 var con = sql();
+var loginSql=require('./logindb');
+var loginCon=loginSql();
 var router = express.Router();
 var bodyparser = require('body-parser');
 var cors = require('cors');
@@ -37,6 +39,7 @@ router.get("/home", (req, res) => {
 router.post("/user", (req, res) => {
     var empno = req.body.rempno;
     con.query(`SELECT cards.rempno,cards.sempno,senddate,category,message,emp_name FROM cards INNER JOIN employees ON cards.sempno=employees.rempno where cards.rempno='${empno}' ORDER BY senddate DESC`, (err, result, fields) => {
+        console.log(result);
         if (err) {
             throw err;
         }
@@ -96,8 +99,8 @@ router.post("/newCard", (req, res) => {
  * 
  */
 
-router.get("/cardNumbers", (req, res) => {
-    var rempno = 'P04967'; //Needs to be obtained via login session object
+router.post("/cardNumbers", (req, res) => {
+    var rempno = req.body.rempno;
 
     async function getValues() {
         var p = await countCards('P', rempno);
@@ -109,6 +112,7 @@ router.get("/cardNumbers", (req, res) => {
         res.send(values);
     }
     getValues();
+
 })
 
 /**
@@ -125,6 +129,19 @@ router.post("/mySentCards", (req, res) => {
             res.send(result);
         }
     })
+})
+
+
+router.post("/getUserData",(request,response)=>{
+    var bearerToken = request.body.bearerToken;
+
+    async function getData(){
+        var username = await queryUsername(bearerToken);
+        var empName = await queryEmpName(username);
+        var userData = { "username": username, "empName": empName}
+        response.send(userData);
+    }
+    getData();
 })
 
 /**
@@ -149,6 +166,34 @@ function countCards(cardCategory, rempno) {
             }
         });
     })
+}
+
+function queryUsername(bearerToken) {
+    return new Promise(function (resolve, reject) {
+        loginCon.query(`SELECT username FROM account WHERE id=(SELECT username_id FROM token where bearer_token='${bearerToken}');`, function (error,result) {
+            if (result) {
+                let res = result[0].username;
+                resolve(res);
+            }
+            else {
+                reject("Error retrieving username");
+            }
+        })
+    });
+}
+
+function queryEmpName(username) {
+    return new Promise(function (resolve, reject) {
+        con.query(`SELECT emp_name FROM employees WHERE rempno='${username}';`, function (error,result) {
+            if (result) {
+                let res = result[0].emp_name;
+                resolve(res);
+            }
+            else {
+                reject("Error retrieving employee name");
+            }
+        })
+    });
 }
 
 module.exports = router

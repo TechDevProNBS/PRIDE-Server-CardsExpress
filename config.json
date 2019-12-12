@@ -12,6 +12,13 @@
             "user": "root",
             "password": "root",
             "port": "3306"
+        },
+        "login_database": {
+            "name": "users",
+            "host": "localhost",
+            "user": "root",
+            "password": "root",
+            "port": "3306"
         }
     },
     "testing": {
